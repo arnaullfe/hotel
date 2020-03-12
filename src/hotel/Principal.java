@@ -5,7 +5,7 @@
  */
 package hotel;
 
-import hotel.Views.Finestra;
+import hotel.views.Finestra;
 
 /**
  *

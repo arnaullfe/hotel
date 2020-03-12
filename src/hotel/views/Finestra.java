@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package hotel.Views;
+package hotel.views;
 
 import com.toedter.calendar.JCalendar;
 import com.toedter.calendar.JDateChooser;
@@ -30,34 +30,34 @@ import javax.swing.table.DefaultTableModel;
  * @author arnau.llopart
  */
 public class Finestra extends JFrame{
-    private int amplada;
-    private int altura;
+    int amplada;
+    int altura;
     
     /*<-----------------FONTS------------------------->*/
-    private Font titol = new Font("Dyuthi",Font.BOLD,40);
-    private Font cos = new Font("Liberation Serif",Font.ITALIC,18);
+    Font titol = new Font("Dyuthi",Font.BOLD,40);
+    Font cos = new Font("Liberation Serif",Font.ITALIC,18);
     
     /*<-----------------PANELLS----------------------->*/
-     private JPanel jpGestio, jpClients, jpBack;
+    JPanel jpGestio, jpClients, jpBack;
     
      /*<-----------------GESTIÓ------------------------->*/
-    private JLabel jlGestio,jlBack,jlResPend,jlResConf;
-    private JTable jtResPend,jtResConf;
-    private DefaultTableModel modelResPend,modelResConf;
-    private JDateChooser jdcResConf;
+    JLabel jlGestio,jlBack,jlResPend,jlResConf;
+    JTable jtResPend,jtResConf;
+    DefaultTableModel modelResPend,modelResConf;
+    JDateChooser jdcResConf;
    
     /*<-----------------CLIENTS------------------------->*/
-    private JLabel jlClients,jlDni,jlNom,jlCognoms,jlNumPers,jlNumNits,jlDataEntrada,jlNomIcon,jlDniIcon,jlCognomsIcon,jlNumPersIcon,jlNumNitsIcon;
-    private ImageIcon iiValid,iiNoValid;
-    private JTextField jtfDNI,jtfNom,jtfCognoms,jtfNumPers,jtfNumNits;
-    private JCalendar jcDataEntrada;
-    private JButton jbReserva;
+    JLabel jlClients,jlDni,jlNom,jlCognoms,jlNumPers,jlNumNits,jlDataEntrada,jlNomIcon,jlDniIcon,jlCognomsIcon,jlNumPersIcon,jlNumNitsIcon;
+    ImageIcon iiValid,iiNoValid;
+    JTextField jtfDNI,jtfNom,jtfCognoms,jtfNumPers,jtfNumNits;
+    JCalendar jcDataEntrada;
+    JButton jbReserva;
     
     /*<----------------BACK------------------------------>*/
-    private JLabel jlNomHotel,jlRegHab,jlNum,jlPers,jlConsRes,jlNomClient;
-    private JTextField jtfNomHotel,jtfNum,jtfPers,jtfNomClient;
-    private JButton jbGuardaHotel,jbGuardaReg,jbElimina;
-    private JList client1,client2;
+    JLabel jlNomHotel,jlRegHab,jlNum,jlPers,jlConsRes,jlNomClient;
+    JTextField jtfNomHotel,jtfNum,jtfPers,jtfNomClient;
+    JButton jbGuardaHotel,jbGuardaReg,jbElimina;
+    JList client1,client2;
     
     public Finestra(){
     this.setVisible(true);
