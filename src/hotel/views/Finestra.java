@@ -7,11 +7,15 @@ package hotel.views;
 
 import com.toedter.calendar.JCalendar;
 import com.toedter.calendar.JDateChooser;
+import hotel.controllers.Controller;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
 import java.awt.Image;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import static java.awt.font.TextAttribute.FONT;
+import java.util.Set;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -72,6 +76,8 @@ public class Finestra extends JFrame{
     dissenyGestio();
     dissenyClients();
     dissenyBack();
+    omplirImageIcon();
+    ComprovarCamps();
     }
     
    public void iniciarComponents(){
@@ -155,10 +161,9 @@ public class Finestra extends JFrame{
         jtfDNI.setBounds(150,100,170,30);
         jpClients.add(jtfDNI);
         
-        jlNomIcon = new JLabel();
-        jlNomIcon.setBounds(330,105,30,20);
-        omplirImageIcon();
-        jpClients.add(jlNomIcon);
+        jlDniIcon = new JLabel();
+        jlDniIcon.setBounds(330,105,30,20);
+        jpClients.add(jlDniIcon);
         
         //NOM
         jlNom = new JLabel("Nom: ");
@@ -170,6 +175,10 @@ public class Finestra extends JFrame{
         jtfNom.setBounds(150,150,170,30);
         jpClients.add(jtfNom);
         
+        jlNomIcon = new JLabel();
+        jlNomIcon.setBounds(330,155,30,20);
+        jpClients.add(jlNomIcon);
+        
         //Cognoms
         jlCognoms = new JLabel("Cognoms: ");
         jlCognoms.setBounds(20,200,200,30);
@@ -179,6 +188,11 @@ public class Finestra extends JFrame{
         jtfCognoms = new JTextField();
         jtfCognoms.setBounds(150,200,170,30);
         jpClients.add(jtfCognoms);
+        
+        jlCognomsIcon = new JLabel();
+        jlCognomsIcon.setBounds(330,205,30,20);
+        jpClients.add(jlCognomsIcon);
+        
         
         //número Persones
         jlNumPers = new JLabel("Num. Persones: ");
@@ -190,6 +204,10 @@ public class Finestra extends JFrame{
         jtfNumPers.setBounds(150,250,75,30);
         jpClients.add(jtfNumPers);
         
+        jlNumPersIcon = new JLabel();
+        jlNumPersIcon.setBounds(330,255,30,20);
+        jpClients.add(jlNumPersIcon);
+        
         //Número nits
         jlNumNits = new JLabel("Num. Nits: ");
         jlNumNits.setBounds(20,300,200,30);
@@ -199,6 +217,10 @@ public class Finestra extends JFrame{
         jtfNumNits = new JTextField();
         jtfNumNits.setBounds(150,300,75,30);
         jpClients.add(jtfNumNits);
+        
+        jlNumNitsIcon = new JLabel();
+        jlNumNitsIcon.setBounds(330,305,30,20);
+        jpClients.add(jlNumNitsIcon);
         
         //data entrada
         jlDataEntrada = new JLabel("Data d'entrada: ");
@@ -308,9 +330,63 @@ public class Finestra extends JFrame{
     }
     
     private void omplirImageIcon() {
-        ImageIcon valid = new ImageIcon("valid.png");
-        iiValid = new ImageIcon(valid.getImage().getScaledInstance(jlNomIcon.getWidth(), jlNomIcon.getHeight(), Image.SCALE_SMOOTH));
-        ImageIcon noValid = new ImageIcon("/img/no_valid.png");
-        iiNoValid = new ImageIcon(noValid.getImage().getScaledInstance(jlNomIcon.getWidth(), jlNomIcon.getHeight(), Image.SCALE_SMOOTH));
+        ImageIcon valid = new ImageIcon("img/icons/valid.png");
+        iiValid = new ImageIcon(valid.getImage().getScaledInstance(jlDniIcon.getWidth(), jlDniIcon.getHeight(), Image.SCALE_SMOOTH));
+        ImageIcon noValid = new ImageIcon("img/icons/no_valid.png");
+        iiNoValid = new ImageIcon(noValid.getImage().getScaledInstance(jlDniIcon.getWidth(), jlDniIcon.getHeight(), Image.SCALE_SMOOTH));
+    }
+    public void ComprovarCamps(){
+    KeyListener listener;
+        listener = new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+            }
+            
+            @Override
+            public void keyPressed(KeyEvent e) {
+            }
+            
+            @Override
+            public void keyReleased(KeyEvent e) {
+                if(e.getComponent().equals(jtfDNI)){
+                    if(Controller.validDni(jtfDNI.getText())){
+                        jlDniIcon.setIcon(iiValid);
+                    }else{
+                       jlDniIcon.setIcon(iiNoValid);
+                    }
+                } else if(e.getComponent().equals(jtfNom)){
+                    if(Controller.onlyLetters(jtfNom.getText())){
+                        jlNomIcon.setIcon(iiValid);
+                    } else{
+                        jlNomIcon.setIcon(iiNoValid);
+                    }
+                } else if(e.getComponent().equals(jtfCognoms)){
+                    if(Controller.onlyLetters(jtfCognoms.getText())){
+                        jlCognomsIcon.setIcon(iiValid);
+                    } else{
+                        jlCognomsIcon.setIcon(iiNoValid);
+                    }
+                } else if(e.getComponent().equals(jtfNumPers)){
+                    if(Controller.onlyNumbers(jtfNumPers.getText())){
+                        jlNumPersIcon.setIcon(iiValid);
+                    } else{
+                        jlNumPersIcon.setIcon(iiNoValid);
+                    }
+                } else if(e.getComponent().equals(jtfNumNits)){
+                    if(Controller.onlyNumbers(jtfNumNits.getText())){
+                        jlNumNitsIcon.setIcon(iiValid);
+                    } else{
+                        jlNumNitsIcon.setIcon(iiNoValid);
+                    }
+                }
+                
+            }
+        };
+    jtfDNI.addKeyListener(listener);
+    jtfNom.addKeyListener(listener);
+    jtfCognoms.addKeyListener(listener);
+    jtfNumPers.addKeyListener(listener);
+    jtfNumNits.addKeyListener(listener);
+    
     }
 }
