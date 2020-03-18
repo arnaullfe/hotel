@@ -6,6 +6,7 @@
 package hotel;
 
 import hotel.views.Finestra;
+import model.Hotel;
 
 /**
  *
@@ -13,11 +14,12 @@ import hotel.views.Finestra;
  */
 public class Principal {
 
+       public static Hotel hotel = new Hotel();
+       public static Finestra f = new Finestra();
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        Finestra f = new Finestra();
     }
     
 }
