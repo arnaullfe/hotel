@@ -32,7 +32,7 @@ public class Controller extends JFrame {
         return Integer.parseInt(dni.substring(0,8))%23;
     }
     public static boolean onlyLetters(String string){
-        return string.matches("[a-zA-ZÀ-ú]{2,}");
+        return string.matches("[a-zA-ZÀ-ú ]{2,}");
     }
     
     public static boolean onlyNumbers(String string){
@@ -179,9 +179,15 @@ public class Controller extends JFrame {
    
    public static void clearJTFClient(){
        jtfDNI.setText("");
-       jtfNomClient.setText("");
+       jtfNom.setText("");
+       jtfCognoms.setText("");
        jtfNumNits.setText("");
        jtfNumPers.setText("");
+       jlDniIcon.setIcon(null);
+       jlNomIcon.setIcon(null);
+       jlCognomsIcon.setIcon(null);
+       jlNumNitsIcon.setIcon(null);
+       jlNumPersIcon.setIcon(null);
    }
    
    
