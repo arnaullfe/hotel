@@ -5,8 +5,9 @@
  */
 package hotel;
 
+import hotel.controllers.Controller;
+import hotel.model.Hotel;
 import hotel.views.Finestra;
-import model.Hotel;
 
 /**
  *
@@ -14,12 +15,22 @@ import model.Hotel;
  */
 public class Principal {
 
-       public static Hotel hotel = new Hotel();
-       public static Finestra f = new Finestra();
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+        Finestra vista = new Finestra();
+        Hotel model = new Hotel("RuralCirv");
+        vista.CanviarTitolFinestra(model.getNomHotel());
+        
+        Controller ctrl = new Controller(vista,model);
+        ctrl.ComprovarCampsClient(vista.jpClients.getComponents());
+        ctrl.listenerBotoReservar();
+        ctrl.listenerBotoNomHotel();
+        ctrl.listenerJTFHabitacio();
+        ctrl.listenerBotoReservarHabitacio();
+        //ctrl.afegirDades();
+        ctrl.listenerReservaPendent();
     }
     
 }

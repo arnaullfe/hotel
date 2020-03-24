@@ -7,15 +7,11 @@ package hotel.views;
 
 import com.toedter.calendar.JCalendar;
 import com.toedter.calendar.JDateChooser;
+import hotel.Principal;
 import hotel.controllers.Controller;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Font;
 import java.awt.Image;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import static java.awt.font.TextAttribute.FONT;
-import java.util.Set;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -42,32 +38,32 @@ public class Finestra extends JFrame{
     public Font cos = new Font("Liberation Serif",Font.ITALIC,18);
     
     /*<-----------------PANELLS----------------------->*/
-    public static JPanel jpGestio, jpClients, jpBack;
+    public JPanel jpGestio, jpClients, jpBack;
     
      /*<-----------------GESTIÓ------------------------->*/
-    public static JLabel jlGestio,jlBack,jlResPend,jlResConf;
-    public static JTable jtResPend,jtResConf;
-    public static DefaultTableModel modelResPend,modelResConf;
-    public static JDateChooser jdcResConf;
+    public JLabel jlGestio,jlBack,jlResPend,jlResConf;
+    public JTable jtResPend,jtResConf;
+    public DefaultTableModel modelResPend,modelResConf;
+    public JDateChooser jdcResConf;
    
     /*<-----------------CLIENTS------------------------->*/
-    public static JLabel jlClients,jlDni,jlNom,jlCognoms,jlNumPers,jlNumNits,jlDataEntrada,jlNomIcon,jlDniIcon,jlCognomsIcon,jlNumPersIcon,jlNumNitsIcon;
-    public static ImageIcon iiValid,iiNoValid;
-    public static JTextField jtfDNI,jtfNom,jtfCognoms,jtfNumPers,jtfNumNits;
-    public static JCalendar jcDataEntrada;
-    public static JButton jbReserva;
+    public JLabel jlClients,jlDni,jlNom,jlCognoms,jlNumPers,jlNumNits,jlDataEntrada,jlNomIcon,jlDniIcon,jlCognomsIcon,jlNumPersIcon,jlNumNitsIcon;
+    public ImageIcon iiValid,iiNoValid;
+    public JTextField jtfDNI,jtfNom,jtfCognoms,jtfNumPers,jtfNumNits;
+    public JCalendar jcDataEntrada;
+    public JButton jbReserva;
     
     /*<----------------BACK------------------------------>*/
-    public static JLabel jlNomHotel,jlRegHab,jlNum,jlPers,jlConsRes,jlNomClient;
-    public static JTextField jtfNomHotel,jtfNum,jtfPers,jtfNomClient;
-    public static JButton jbGuardaHotel,jbGuardaReg,jbElimina;
-    public static JList client1,client2;
+    public JLabel jlNomHotel,jlRegHab,jlNum,jlPers,jlConsRes,jlNomClient;
+    public JTextField jtfNomHotel,jtfNum,jtfPers,jtfNomClient;
+    public JButton jbGuardaHotel,jbGuardaReg,jbElimina;
+    public JList client1,client2;
+    
     
     public Finestra(){
     this.setVisible(true);
     this.setSize(1200,720);
     this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-    this.setTitle("RuralCirv");
     this.setLocationRelativeTo(null);
     this.setResizable(true);
     this.getContentPane().setBackground(Color.BLACK);
@@ -115,6 +111,7 @@ public class Finestra extends JFrame{
         modelResPend.addColumn("Habitació");
         jtResPend = new JTable(modelResPend);
         jtResPend.setBounds(20,140,jpGestio.getWidth()-40,200);
+        jtResPend.setEnabled(false);
         jpGestio.add(jtResPend);
         JScrollPane scroll = new JScrollPane(jtResPend,ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         scroll.setBounds(20,140,jtResPend.getWidth(),jtResPend.getHeight());
@@ -242,10 +239,7 @@ public class Finestra extends JFrame{
         jbReserva.setBounds(160,630,100,30);
         jbReserva.setText("Reserva!");
         jbReserva.setEnabled(false);
-        jpClients.add(jbReserva);
-        
-        Controller.ComprovarCampsClient(jpClients.getComponents());
-        Controller.ListenerBotoReservar();
+        jpClients.add(jbReserva);   
     }
 
     private void dissenyBack() {
@@ -285,6 +279,7 @@ public class Finestra extends JFrame{
         
         jtfNum = new JTextField();
         jtfNum.setBounds(75,240,75,30);
+        jtfNum.setName("jtfNumHab");
         jpBack.add(jtfNum);
         
         jlPers = new JLabel("# Pers:");
@@ -294,11 +289,13 @@ public class Finestra extends JFrame{
         
         jtfPers = new JTextField();
         jtfPers.setBounds(270,240,75,30);
+        jtfPers.setName("jtfNumPers");
         jpBack.add(jtfPers);
         
         jbGuardaReg = new JButton();
         jbGuardaReg.setBounds(160,310,100,30);
         jbGuardaReg.setText("Guarda!");
+        jbGuardaReg.setEnabled(false);
         jpBack.add(jbGuardaReg);
         
         /*<----------------------CONSULTA RESERVA--------------------->*/
@@ -336,8 +333,6 @@ public class Finestra extends JFrame{
         jbElimina.setBounds(160,630,100,30);
         jbElimina.setText("Elimina!");
         jpBack.add(jbElimina);
-        
-        Controller.ListenerBotoNomHotel();
     }
     
     private void omplirImageIcon() {
@@ -347,5 +342,27 @@ public class Finestra extends JFrame{
         iiNoValid = new ImageIcon(noValid.getImage().getScaledInstance(jlDniIcon.getWidth(), jlDniIcon.getHeight(), Image.SCALE_SMOOTH));
     }
     
+    public void clearJTFClient(){
+       jtfDNI.setText("");
+       jtfNom.setText("");
+       jtfCognoms.setText("");
+       jtfNumNits.setText("");
+       jtfNumPers.setText("");
+       jlDniIcon.setIcon(null);
+       jlNomIcon.setIcon(null);
+       jlCognomsIcon.setIcon(null);
+       jlNumNitsIcon.setIcon(null);
+       jlNumPersIcon.setIcon(null);
+   }
     
+   public void CanviarTitolFinestra(String nom){
+        this.setTitle(nom);
+   }
+   
+   public void clearRegHab(){
+       jtfNum.setText("");
+       jtfPers.setText("");
+       jbGuardaReg.setEnabled(false);
+   }
+   
 }

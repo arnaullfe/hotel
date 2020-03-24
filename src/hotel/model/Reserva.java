@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package model;
+package hotel.model;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -20,8 +20,18 @@ public class Reserva {
     LocalDate entrada,sortida;
     Habitacio habitacio;
 
-    public Reserva() {
+    public Reserva(Client client, int numPersones, int numNits, LocalDate entrada, LocalDate sortida, Habitacio habitacio) {
+        this.client = client;
+        this.numPersones = numPersones;
+        this.numNits = numNits;
+        this.entrada = entrada;
+        this.sortida = sortida;
+        this.habitacio = habitacio;
     }
+
+    public Reserva(){
+    }
+    
 
     public Client getClient() {
         return client;
@@ -78,7 +88,7 @@ public class Reserva {
         array[1] = this.entrada.format(formatter);
         array[2] = this.sortida.format(formatter);
         array[3] = Integer.toString(this.numPersones);
-        array[4] = " ";
+        array[4] = Integer.toString(this.habitacio.getNumHab());
         return array;
     }
 }
