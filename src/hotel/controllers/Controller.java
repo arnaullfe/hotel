@@ -267,7 +267,12 @@ public class Controller {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if(e.getClickCount()==2){
-                    System.out.println(view.jtResPend.rowAtPoint(e.getPoint()));
+                    int posicio = view.jtResPend.rowAtPoint((e.getPoint()));
+                    Reserva confirmada = hotel.getLlistaReservesPendents().get(posicio);
+                    hotel.novaReservaConrifmada(confirmada);
+                    hotel.eliminarRerservaPendent(posicio);
+                    view.modelResPend.removeRow(posicio);
+                    view.modelResConf.addRow(confirmada.arrayReservaPendent());
                 }
             }
 

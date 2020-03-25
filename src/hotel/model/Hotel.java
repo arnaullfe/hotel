@@ -150,4 +150,16 @@ public class Hotel {
     public boolean overlap(LocalDate start1, LocalDate end1, LocalDate start2, LocalDate end2) {
         return start2.isBefore(end1) && end2.isAfter(start1);
     }
+    
+    public Reserva getReservaPendent(int pos){
+        return this.llistaReservesPendents.get(pos);
+    }
+    
+    public void novaReservaConrifmada(Reserva reserva){
+        this.llistaResservesConfirmades.add(reserva);
+    }
+    
+    public void eliminarRerservaPendent(int pos){
+        this.llistaReservesPendents.remove(pos);
+    }
 }

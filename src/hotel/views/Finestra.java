@@ -127,9 +127,10 @@ public class Finestra extends JFrame{
         jpGestio.add(jdcResConf);
         
         modelResConf = new DefaultTableModel();
-        modelResConf.addColumn("Nom");
-        modelResConf.addColumn("Date in");
-        modelResConf.addColumn("Date out");
+        modelResConf.addColumn("DNI");
+        modelResConf.addColumn("Entrada");
+        modelResConf.addColumn("Sortida");
+        modelResConf.addColumn("Persones");
         modelResConf.addColumn("Habitació");
         jtResConf = new JTable(modelResConf);
         jtResConf.setBounds(20,400,jpGestio.getWidth()-40,200);
