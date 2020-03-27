@@ -21,6 +21,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.JToggleButton;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableModel;
@@ -45,7 +46,7 @@ public class Finestra extends JFrame{
     public JTable jtResPend,jtResConf;
     public DefaultTableModel modelResPend,modelResConf;
     public JDateChooser jdcResConf;
-   
+    public JToggleButton jtbSwitch;
     /*<-----------------CLIENTS------------------------->*/
     public JLabel jlClients,jlDni,jlNom,jlCognoms,jlNumPers,jlNumNits,jlDataEntrada,jlNomIcon,jlDniIcon,jlCognomsIcon,jlNumPersIcon,jlNumNitsIcon;
     public ImageIcon iiValid,iiNoValid;
@@ -122,8 +123,13 @@ public class Finestra extends JFrame{
         jlResConf.setFont(cos);
         jpGestio.add(jlResConf);
         
+        jtbSwitch = new JToggleButton();
+        jtbSwitch.setBounds(20, 400, 100, 30);
+        jtbSwitch.setText("Entrades");
+        jpGestio.add(jtbSwitch);
+        
         jdcResConf = new JDateChooser();
-        jdcResConf.setBounds(210,360,168,30);
+        jdcResConf.setBounds(210,400,168,30);
         jpGestio.add(jdcResConf);
         
         modelResConf = new DefaultTableModel();
@@ -133,10 +139,11 @@ public class Finestra extends JFrame{
         modelResConf.addColumn("Persones");
         modelResConf.addColumn("Habitació");
         jtResConf = new JTable(modelResConf);
-        jtResConf.setBounds(20,400,jpGestio.getWidth()-40,200);
+        jtResConf.setBounds(20,440,jpGestio.getWidth()-40,200);
+        jtResConf.setEnabled(false);
         jpGestio.add(jtResConf);
         JScrollPane scrollResConf = new JScrollPane(jtResConf,ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-        scrollResConf.setBounds(20,400,jtResConf.getWidth(),jtResConf.getHeight());
+        scrollResConf.setBounds(20,440,jtResConf.getWidth(),jtResConf.getHeight());
         jpGestio.add(scrollResConf);
         
     }

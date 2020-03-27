@@ -31,6 +31,7 @@ public class Principal {
         ctrl.listenerBotoReservarHabitacio();
         //ctrl.afegirDades();
         ctrl.listenerReservaPendent();
+        ctrl.listenerToggleButtonEntradesSortides();
     }
     
 }

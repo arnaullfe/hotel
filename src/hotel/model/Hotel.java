@@ -162,4 +162,24 @@ public class Hotel {
     public void eliminarRerservaPendent(int pos){
         this.llistaReservesPendents.remove(pos);
     }
+    
+    public ArrayList<Reserva> mostrarSortides(LocalDate date){
+        ArrayList<Reserva> sortides = new ArrayList<>();
+        for(Reserva a: this.llistaResservesConfirmades){
+            if(a.getSortida().equals(date)){
+                sortides.add(a);
+            }
+        }
+        return sortides;
+    }
+    
+    public ArrayList<Reserva> mostrarEntrades(LocalDate date){
+    ArrayList<Reserva> al = new ArrayList<>();
+        for(Reserva a: this.llistaResservesConfirmades){
+            if(a.getEntrada().equals(date)){
+                al.add(a);
+            }
+        }
+        return al;
+    }
 }

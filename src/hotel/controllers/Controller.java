@@ -16,8 +16,11 @@ import java.awt.event.MouseListener;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 public class Controller {
 
@@ -29,7 +32,7 @@ public class Controller {
         this.hotel = hotel;
     }
 
-    public void afegirDades(){
+    public void afegirDades() {
         Client client = new Client("48042164v", "arnau", "llopart");
         Client client2 = new Client("00000000v", "Berta", "Torras");
         Habitacio hab1 = new Habitacio(3, 2);
@@ -38,7 +41,7 @@ public class Controller {
         hotel.afegirHabitacio(hab2);
         hotel.afegirReservaPendent(new Reserva(client, 3, 2, LocalDate.now(), LocalDate.now().plusDays(2), hab1));
         hotel.afegirReservaConfirmada(new Reserva(client2, 1, 1, LocalDate.now(), LocalDate.now().plusDays(1), hab2));
-        
+
     }
 
     public boolean validDni(String dni) {
@@ -195,18 +198,18 @@ public class Controller {
                 reserva.setNumNits(Integer.parseInt(view.jtfNumNits.getText()));
                 reserva.setEntrada(DataEntrada(view.jcDataEntrada.getDate().getTime()));
                 reserva.setSortida(DataEntrada(view.jcDataEntrada.getDate().getTime()).plusDays(Integer.parseInt(view.jtfNumNits.getText())));
-                Habitacio assignat = hotel.numeroHabitacio(reserva);    
-                if(assignat!=null){
-                reserva.setHabitacio(assignat);
-                hotel.afegirReservaPendent(reserva);
-                view.modelResPend.addRow(reserva.arrayReservaPendent());
-                view.clearJTFClient();
-                JOptionPane.showMessageDialog(null, "La reserva ha estat feta correctament");
-                } else{
-                JOptionPane.showMessageDialog(null," Error, no hi ha habitacions disponibles per aquests dies");
+                Habitacio assignat = hotel.numeroHabitacio(reserva);
+                if (assignat != null) {
+                    reserva.setHabitacio(assignat);
+                    hotel.afegirReservaPendent(reserva);
+                    view.modelResPend.addRow(reserva.arrayReservaPendent());
+                    view.clearJTFClient();
+                    JOptionPane.showMessageDialog(null, "La reserva ha estat feta correctament");
+                } else {
+                    JOptionPane.showMessageDialog(null, " Error, no hi ha habitacions disponibles per aquests dies");
                 }
                 view.clearJTFClient();
-                
+
             }
         };
         view.jbReserva.addActionListener(reserva);
@@ -240,16 +243,16 @@ public class Controller {
             public void actionPerformed(ActionEvent e) {
                 Habitacio nova = hotel.habitacioExisteix(Integer.parseInt(view.jtfNum.getText()));
                 if (nova != null) {
-                    int novaCapacitat = nova.getNumPers()+(Integer.parseInt(view.jtfPers.getText()));
-                    int opcio = JOptionPane.showConfirmDialog(null, "El númeor d'habitació ja existeix. -Capacitat actual: " + nova.getNumPers() + " persones    -Nova capacitat: "+novaCapacitat+" persones. \nEstàs segur que ho desitges canviar?" );
-                    switch (opcio){
+                    int novaCapacitat = nova.getNumPers() + (Integer.parseInt(view.jtfPers.getText()));
+                    int opcio = JOptionPane.showConfirmDialog(null, "El númeor d'habitació ja existeix. -Capacitat actual: " + nova.getNumPers() + " persones    -Nova capacitat: " + novaCapacitat + " persones. \nEstàs segur que ho desitges canviar?");
+                    switch (opcio) {
                         case 0:
                             hotel.canviarMida(nova.getNumHab(), novaCapacitat);
                             break;
                         case 1:
-                             break;
-                        case 2: 
-                             break;
+                            break;
+                        case 2:
+                            break;
                     }
                 } else {
                     Habitacio habitacio = new Habitacio(Integer.parseInt(view.jtfNum.getText()), Integer.parseInt(view.jtfPers.getText()));
@@ -261,18 +264,28 @@ public class Controller {
         };
         view.jbGuardaReg.addActionListener(listener);
     }
-    
-    public void listenerReservaPendent(){
-        MouseListener confirmar= new MouseListener() {
+
+    public void listenerReservaPendent() {
+        String[] opcions = {"Confirmar-la", "No confirmar-la"};
+        MouseListener confirmar = new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if(e.getClickCount()==2){
-                    int posicio = view.jtResPend.rowAtPoint((e.getPoint()));
-                    Reserva confirmada = hotel.getLlistaReservesPendents().get(posicio);
-                    hotel.novaReservaConrifmada(confirmada);
-                    hotel.eliminarRerservaPendent(posicio);
-                    view.modelResPend.removeRow(posicio);
-                    view.modelResConf.addRow(confirmada.arrayReservaPendent());
+                if (e.getClickCount() == 2) {
+                    String opcio = (String) JOptionPane.showInputDialog(view, "Selecciona el que vols fer amb la reserva", opcions[0], JOptionPane.DEFAULT_OPTION, null, opcions, opcions[0]);
+
+                    switch (opcio) {
+                        case "Confirmar-la":
+                            int posicio = view.jtResPend.rowAtPoint((e.getPoint()));
+                            Reserva confirmada = hotel.getLlistaReservesPendents().get(posicio);
+                            hotel.novaReservaConrifmada(confirmada);
+                            hotel.eliminarRerservaPendent(posicio);
+                            view.modelResPend.removeRow(posicio);
+                            JOptionPane.showMessageDialog(view, "La reserva s'ha fet correctament!");
+                            updateTaulaReservesonfirmades();
+                            break;
+                        case "No confirmar-la":
+                            break;
+                    }
                 }
             }
 
@@ -293,5 +306,42 @@ public class Controller {
             }
         };
         view.jtResPend.addMouseListener(confirmar);
+    }
+
+    public void listenerToggleButtonEntradesSortides() {
+        ChangeListener listener = new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                updateTaulaReservesonfirmades();
+            }
+        };
+        view.jtbSwitch.addChangeListener(listener);
+    }
+
+    public void afegirArrayListToTaula(ArrayList<Reserva> al) {
+        for (Reserva a : al) {
+            view.modelResConf.addRow(a.arrayReservaPendent());
+        }
+    }
+
+    public void updateTaulaReservesonfirmades() {
+        view.modelResConf.setRowCount(0);
+        if (view.jtbSwitch.isSelected()) {
+            view.jtbSwitch.setText("Sortides");
+            if (view.jdcResConf.getDate() != null) {
+                ArrayList<Reserva> al = hotel.mostrarSortides(DataEntrada(view.jdcResConf.getDate().getTime()));
+                afegirArrayListToTaula(al);
+            }
+        } else {
+            view.jtbSwitch.setText("Entrades");
+            if (view.jdcResConf.getDate() != null) {
+                ArrayList<Reserva> al = hotel.mostrarEntrades(DataEntrada(view.jdcResConf.getDate().getTime()));
+                afegirArrayListToTaula(al);
+            }
+        }
+    }
+    
+    public void listenerJdcReservesConfirmades(){
+       // PropertyChange 
     }
 }
