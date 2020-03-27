@@ -32,6 +32,7 @@ public class Principal {
         //ctrl.afegirDades();
         ctrl.listenerReservaPendent();
         ctrl.listenerToggleButtonEntradesSortides();
+        ctrl.listenerJdcReservesConfirmades();
     }
     
 }

@@ -13,6 +13,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -266,24 +268,26 @@ public class Controller {
     }
 
     public void listenerReservaPendent() {
-        String[] opcions = {"Confirmar-la", "No confirmar-la"};
+        String[] opcions = {"Confirmar la reserva", "Descartar la reserva","Cancel·lar"};
         MouseListener confirmar = new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (e.getClickCount() == 2) {
-                    String opcio = (String) JOptionPane.showInputDialog(view, "Selecciona el que vols fer amb la reserva", opcions[0], JOptionPane.DEFAULT_OPTION, null, opcions, opcions[0]);
-
+                    String opcio = (String) JOptionPane.showInputDialog(view, "Selecciona el que vols fer amb la reserva:", opcions[0], JOptionPane.DEFAULT_OPTION, null, opcions, opcions[0]);
+                    int posicio = view.jtResPend.rowAtPoint((e.getPoint()));
                     switch (opcio) {
-                        case "Confirmar-la":
-                            int posicio = view.jtResPend.rowAtPoint((e.getPoint()));
+                        case "Confirmar la reserva":
                             Reserva confirmada = hotel.getLlistaReservesPendents().get(posicio);
                             hotel.novaReservaConrifmada(confirmada);
                             hotel.eliminarRerservaPendent(posicio);
                             view.modelResPend.removeRow(posicio);
-                            JOptionPane.showMessageDialog(view, "La reserva s'ha fet correctament!");
+                            JOptionPane.showMessageDialog(view, "La reserva s'ha confirmat correctament!");
                             updateTaulaReservesonfirmades();
                             break;
-                        case "No confirmar-la":
+                        case "Descartar la reserva":
+                            hotel.eliminarRerservaPendent(posicio);
+                            view.modelResPend.removeRow(posicio);
+                            JOptionPane.showMessageDialog(view, "La reserva s'ha descartat correctament!");
                             break;
                     }
                 }
@@ -342,6 +346,13 @@ public class Controller {
     }
     
     public void listenerJdcReservesConfirmades(){
-       // PropertyChange 
+        view.jdcResConf.getDateEditor().addPropertyChangeListener(new PropertyChangeListener() {
+            @Override
+            public void propertyChange(PropertyChangeEvent e) {
+                if(view.jdcResConf.getDate() != null){
+                    updateTaulaReservesonfirmades();
+                }
+            }
+        });
     }
 }

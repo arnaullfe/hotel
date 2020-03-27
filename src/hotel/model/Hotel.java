@@ -115,7 +115,6 @@ public class Hotel {
                 if (a.getNumPers() == reserva.getNumPersones() + i) {
                     boolean ocupada = false;
                     for (Reserva b : totesLesReserves()) {
-                        System.out.println("DINS");
                         if (b.getHabitacio().getNumHab() == a.getNumHab()) {
                             if (overlap(reserva.entrada, reserva.getSortida(), b.getEntrada(), b.getSortida())) {
                                 ocupada = true;
