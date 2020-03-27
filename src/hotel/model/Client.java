@@ -17,5 +17,7 @@ public class Client {
         this.nom = nom;
         this.cognoms = cognoms;
     }
-    
+    public String infoClient(){
+        return this.nom.substring(0, 1)+"."+this.cognoms+" - "+this.dni;
+    }
 }

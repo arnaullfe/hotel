@@ -12,6 +12,7 @@ import hotel.controllers.Controller;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Image;
+import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -58,7 +59,8 @@ public class Finestra extends JFrame{
     public JLabel jlNomHotel,jlRegHab,jlNum,jlPers,jlConsRes,jlNomClient;
     public JTextField jtfNomHotel,jtfNum,jtfPers,jtfNomClient;
     public JButton jbGuardaHotel,jbGuardaReg,jbElimina;
-    public JList client1,client2;
+    public JList jlistnomClient,jlistReservesClient;
+    public DefaultListModel modelNomClient, modelReservesClient;
     
     
     public Finestra(){
@@ -321,20 +323,24 @@ public class Finestra extends JFrame{
         jtfNomClient.setBounds(140,425,200,30);
         jpBack.add(jtfNomClient);
         
-        client1 = new JList();
-        client1.setBounds(20,480,160,130);
-        jpBack.add(client1);
+        modelNomClient = new DefaultListModel();
         
-        JScrollPane scrollClient1 = new JScrollPane(client1,ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-        scrollClient1.setBounds(20,480,client1.getWidth(),client1.getHeight());
+        jlistnomClient = new JList(modelNomClient);
+        jlistnomClient.setBounds(20,480,160,130);
+        jpBack.add(jlistnomClient);
+        
+        JScrollPane scrollClient1 = new JScrollPane(jlistnomClient,ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        scrollClient1.setBounds(20,480,jlistnomClient.getWidth(),jlistnomClient.getHeight());
         jpBack.add(scrollClient1);
         
-        client2 = new JList();
-        client2.setBounds(220,480,160,130);
-        jpBack.add(client2);
+        modelReservesClient = new DefaultListModel();
         
-        JScrollPane scrollClient2 = new JScrollPane(client2,ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-        scrollClient2.setBounds(220,480,client2.getWidth(),client2.getHeight());
+        jlistReservesClient = new JList();
+        jlistReservesClient.setBounds(220,480,160,130);
+        jpBack.add(jlistReservesClient);
+        
+        JScrollPane scrollClient2 = new JScrollPane(jlistReservesClient,ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        scrollClient2.setBounds(220,480,jlistReservesClient.getWidth(),jlistReservesClient.getHeight());
         jpBack.add(scrollClient2);
         
         jbElimina = new JButton();

@@ -33,6 +33,7 @@ public class Principal {
         ctrl.listenerReservaPendent();
         ctrl.listenerToggleButtonEntradesSortides();
         ctrl.listenerJdcReservesConfirmades();
+        ctrl.listenerjtfNomClient();
     }
     
 }

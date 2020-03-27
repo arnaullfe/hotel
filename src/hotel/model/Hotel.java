@@ -73,8 +73,8 @@ public class Hotel {
         return false;
     }
 
-    public void afegirClient(String dni, String nom, String cognom) {
-        this.llistaClients.add(new Client(dni, nom, cognom));
+    public void afegirClient(Client cli) {
+        this.llistaClients.add(cli);
     }
 
     public Client getObjectClient(String dni) {
@@ -176,6 +176,15 @@ public class Hotel {
     ArrayList<Reserva> al = new ArrayList<>();
         for(Reserva a: this.llistaResservesConfirmades){
             if(a.getEntrada().equals(date)){
+                al.add(a);
+            }
+        }
+        return al;
+    }
+    public ArrayList<Client> mostraClients(String info){
+        ArrayList<Client> al = new ArrayList<>();
+        for(Client a : this.llistaClients){
+            if(a.nom.toUpperCase().contains(info)||a.dni.toUpperCase().contains(info)||a.cognoms.toUpperCase().contains(info)){
                 al.add(a);
             }
         }

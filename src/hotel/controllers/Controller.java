@@ -193,7 +193,8 @@ public class Controller {
             public void actionPerformed(ActionEvent e) {
                 Reserva reserva = new Reserva();
                 if (!hotel.clientExisteix(view.jtfDNI.getText())) {
-                    hotel.afegirClient(view.jtfDNI.getText().toUpperCase(), view.jtfNomClient.getText(), view.jtfCognoms.getText());
+                    Client cli = new Client(view.jtfDNI.getText().toUpperCase(), view.jtfNom.getText(), view.jtfCognoms.getText());
+                    hotel.afegirClient(cli);
                 }
                 reserva.setClient(hotel.getObjectClient(view.jtfDNI.getText()));
                 reserva.setNumPersones(Integer.parseInt(view.jtfNumPers.getText()));
@@ -354,5 +355,32 @@ public class Controller {
                 }
             }
         });
+    }
+    
+    public void listenerjtfNomClient(){
+        KeyListener listener = new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+            }
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+                view.modelNomClient.clear();
+                if(!view.jtfNomClient.getText().isEmpty()){
+                 afegirClientsJList(hotel.mostraClients(view.jtfNomClient.getText().toUpperCase()));
+                }
+            }
+        };
+        view.jtfNomClient.addKeyListener(listener);
+    }
+    
+    public void afegirClientsJList(ArrayList<Client> al){
+        for(Client a : al){
+            view.modelNomClient.addElement(a.infoClient());
+        }
     }
 }
