@@ -7,8 +7,6 @@ package hotel.views;
 
 import com.toedter.calendar.JCalendar;
 import com.toedter.calendar.JDateChooser;
-import hotel.Principal;
-import hotel.controllers.Controller;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Image;
@@ -335,7 +333,7 @@ public class Finestra extends JFrame{
         
         modelReservesClient = new DefaultListModel();
         
-        jlistReservesClient = new JList();
+        jlistReservesClient = new JList(modelReservesClient);
         jlistReservesClient.setBounds(220,480,160,130);
         jpBack.add(jlistReservesClient);
         
@@ -346,6 +344,7 @@ public class Finestra extends JFrame{
         jbElimina = new JButton();
         jbElimina.setBounds(160,630,100,30);
         jbElimina.setText("Elimina!");
+        jbElimina.setEnabled(false);
         jpBack.add(jbElimina);
     }
     

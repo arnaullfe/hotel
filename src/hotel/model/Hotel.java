@@ -66,7 +66,7 @@ public class Hotel {
 
     public boolean clientExisteix(String dni) {
         for (Client client : this.llistaClients) {
-            if (dni.equalsIgnoreCase(client.dni)) {
+            if (client.getDni().equalsIgnoreCase(dni)) {
                 return true;
             }
         }
@@ -79,7 +79,7 @@ public class Hotel {
 
     public Client getObjectClient(String dni) {
         for (Client client : this.llistaClients) {
-            if (dni.equalsIgnoreCase(dni)) {
+            if (client.getDni().equalsIgnoreCase(dni)) {
                 return client;
             }
         }
@@ -116,7 +116,7 @@ public class Hotel {
                     boolean ocupada = false;
                     for (Reserva b : totesLesReserves()) {
                         if (b.getHabitacio().getNumHab() == a.getNumHab()) {
-                            if (overlap(reserva.entrada, reserva.getSortida(), b.getEntrada(), b.getSortida())) {
+                            if (overlap(reserva.getEntrada(), reserva.getSortida(), b.getEntrada(), b.getSortida())) {
                                 ocupada = true;
                                 break;
                             } 
@@ -154,7 +154,7 @@ public class Hotel {
         return this.llistaReservesPendents.get(pos);
     }
     
-    public void novaReservaConrifmada(Reserva reserva){
+    public void novaReservaConfirmada(Reserva reserva){
         this.llistaResservesConfirmades.add(reserva);
     }
     
@@ -184,10 +184,25 @@ public class Hotel {
     public ArrayList<Client> mostraClients(String info){
         ArrayList<Client> al = new ArrayList<>();
         for(Client a : this.llistaClients){
-            if(a.nom.toUpperCase().contains(info)||a.dni.toUpperCase().contains(info)||a.cognoms.toUpperCase().contains(info)){
+            if(a.getNom().toUpperCase().contains(info)||a.getDni().toUpperCase().contains(info)||a.getCognoms().toUpperCase().contains(info)){
                 al.add(a);
             }
         }
         return al;
     }
+    
+    public ArrayList<Reserva> reservesClient(Client client){
+        ArrayList<Reserva> al = new ArrayList<>();
+        for(Reserva a : totesLesReserves()){
+            if(a.getClient().equals(client)){
+                al.add(a);
+            }
+        }
+        return al;
+    }
+    
+    public Reserva getReserva(){
+        return null;
+    }
+    
 }

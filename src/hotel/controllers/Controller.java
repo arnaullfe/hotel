@@ -23,11 +23,14 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 public class Controller {
 
     private Finestra view;
     private Hotel hotel;
+    private int idReserva = 1;
 
     public Controller(Finestra view, Hotel hotel) {
         this.view = view;
@@ -196,6 +199,7 @@ public class Controller {
                     Client cli = new Client(view.jtfDNI.getText().toUpperCase(), view.jtfNom.getText(), view.jtfCognoms.getText());
                     hotel.afegirClient(cli);
                 }
+                reserva.setIdReserva(idReserva);
                 reserva.setClient(hotel.getObjectClient(view.jtfDNI.getText()));
                 reserva.setNumPersones(Integer.parseInt(view.jtfNumPers.getText()));
                 reserva.setNumNits(Integer.parseInt(view.jtfNumNits.getText()));
@@ -208,6 +212,7 @@ public class Controller {
                     view.modelResPend.addRow(reserva.arrayReservaPendent());
                     view.clearJTFClient();
                     JOptionPane.showMessageDialog(null, "La reserva ha estat feta correctament");
+                    idReserva++;
                 } else {
                     JOptionPane.showMessageDialog(null, " Error, no hi ha habitacions disponibles per aquests dies");
                 }
@@ -247,7 +252,7 @@ public class Controller {
                 Habitacio nova = hotel.habitacioExisteix(Integer.parseInt(view.jtfNum.getText()));
                 if (nova != null) {
                     int novaCapacitat = nova.getNumPers() + (Integer.parseInt(view.jtfPers.getText()));
-                    int opcio = JOptionPane.showConfirmDialog(null, "El númeor d'habitació ja existeix. -Capacitat actual: " + nova.getNumPers() + " persones    -Nova capacitat: " + novaCapacitat + " persones. \nEstàs segur que ho desitges canviar?");
+                    int opcio = JOptionPane.showConfirmDialog(null, "El númerod'habitació ja existeix. -Capacitat actual: " + nova.getNumPers() + " persones    -Nova capacitat: " + novaCapacitat + " persones. \nEstàs segur que ho desitges canviar?");
                     switch (opcio) {
                         case 0:
                             hotel.canviarMida(nova.getNumHab(), novaCapacitat);
@@ -269,27 +274,32 @@ public class Controller {
     }
 
     public void listenerReservaPendent() {
-        String[] opcions = {"Confirmar la reserva", "Descartar la reserva","Cancel·lar"};
+        String[] opcions = {"Confirmar la reserva", "Descartar la reserva", "Cancel·lar"};
         MouseListener confirmar = new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (e.getClickCount() == 2) {
                     String opcio = (String) JOptionPane.showInputDialog(view, "Selecciona el que vols fer amb la reserva:", opcions[0], JOptionPane.DEFAULT_OPTION, null, opcions, opcions[0]);
-                    int posicio = view.jtResPend.rowAtPoint((e.getPoint()));
-                    switch (opcio) {
-                        case "Confirmar la reserva":
-                            Reserva confirmada = hotel.getLlistaReservesPendents().get(posicio);
-                            hotel.novaReservaConrifmada(confirmada);
-                            hotel.eliminarRerservaPendent(posicio);
-                            view.modelResPend.removeRow(posicio);
-                            JOptionPane.showMessageDialog(view, "La reserva s'ha confirmat correctament!");
-                            updateTaulaReservesonfirmades();
-                            break;
-                        case "Descartar la reserva":
-                            hotel.eliminarRerservaPendent(posicio);
-                            view.modelResPend.removeRow(posicio);
-                            JOptionPane.showMessageDialog(view, "La reserva s'ha descartat correctament!");
-                            break;
+                    if (opcio != null) {
+                        int posicio = view.jtResPend.rowAtPoint((e.getPoint()));
+                        switch (opcio) {
+                            case "Confirmar la reserva":
+                                Reserva confirmada = hotel.getLlistaReservesPendents().get(posicio);
+                                hotel.novaReservaConfirmada(confirmada);
+                                hotel.eliminarRerservaPendent(posicio);
+                                view.modelResPend.removeRow(posicio);
+                                JOptionPane.showMessageDialog(view, "La reserva s'ha confirmat correctament!");
+                                updateTaulaReservesonfirmades();
+                                break;
+                            case "Descartar la reserva":
+                                hotel.eliminarRerservaPendent(posicio);
+                                view.modelResPend.removeRow(posicio);
+                                JOptionPane.showMessageDialog(view, "La reserva s'ha descartat correctament!");
+                                break;
+                            default:
+                                break;
+                        }
+
                     }
                 }
             }
@@ -345,19 +355,19 @@ public class Controller {
             }
         }
     }
-    
-    public void listenerJdcReservesConfirmades(){
+
+    public void listenerJdcReservesConfirmades() {
         view.jdcResConf.getDateEditor().addPropertyChangeListener(new PropertyChangeListener() {
             @Override
             public void propertyChange(PropertyChangeEvent e) {
-                if(view.jdcResConf.getDate() != null){
+                if (view.jdcResConf.getDate() != null) {
                     updateTaulaReservesonfirmades();
                 }
             }
         });
     }
-    
-    public void listenerjtfNomClient(){
+
+    public void listenerjtfNomClient() {
         KeyListener listener = new KeyListener() {
             @Override
             public void keyTyped(KeyEvent e) {
@@ -370,17 +380,61 @@ public class Controller {
             @Override
             public void keyReleased(KeyEvent e) {
                 view.modelNomClient.clear();
-                if(!view.jtfNomClient.getText().isEmpty()){
-                 afegirClientsJList(hotel.mostraClients(view.jtfNomClient.getText().toUpperCase()));
+                if (!view.jtfNomClient.getText().isEmpty()) {
+                    afegirClientsJList(hotel.mostraClients(view.jtfNomClient.getText().toUpperCase()));
                 }
             }
         };
         view.jtfNomClient.addKeyListener(listener);
     }
-    
-    public void afegirClientsJList(ArrayList<Client> al){
-        for(Client a : al){
-            view.modelNomClient.addElement(a.infoClient());
+
+    public void afegirClientsJList(ArrayList<Client> al) {
+        for (Client a : al) {
+            view.modelNomClient.addElement(a);
         }
+    }
+
+    public void listenerJlistClients() {
+        ListSelectionListener listener = new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                view.modelReservesClient.clear();
+                    Client client = (Client) view.jlistnomClient.getSelectedValue();
+                    if(client!=null){
+                        afegirReservesClientJList(hotel.reservesClient(client));
+                    }
+                
+            }
+        };
+        view.jlistnomClient.addListSelectionListener(listener);
+    }
+
+    public void afegirReservesClientJList(ArrayList<Reserva> al) {
+        for (Reserva a : al) {
+            view.modelReservesClient.addElement(a);
+        }
+    }
+    
+    public void listenerJlistReserves(){
+        ListSelectionListener listener = new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                view.jbElimina.setEnabled(true);
+            }
+        };
+        view.jlistReservesClient.addListSelectionListener(listener);
+    }
+    
+    public void listenerJbuttonElimina(){
+        ActionListener listener = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int opcio = JOptionPane.showConfirmDialog(view, "Estàs segur de que vols eliminar la reserva?");
+                switch(opcio){
+                    case 0:
+                        
+                }
+            }
+        };
     }
 }

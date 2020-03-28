@@ -34,6 +34,8 @@ public class Principal {
         ctrl.listenerToggleButtonEntradesSortides();
         ctrl.listenerJdcReservesConfirmades();
         ctrl.listenerjtfNomClient();
+        ctrl.listenerJlistClients();
+        ctrl.listenerJlistReserves();
     }
     
 }

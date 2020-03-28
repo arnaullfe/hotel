@@ -7,17 +7,16 @@ package hotel.model;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeFormatterBuilder;
-import java.util.ArrayList;
 
 /**
  *
  * @author arnau1
  */
 public class Reserva {
+
     Client client;
-    int numPersones, numNits;
-    LocalDate entrada,sortida;
+    int numPersones, numNits, idReserva;
+    LocalDate entrada, sortida;
     Habitacio habitacio;
 
     public Reserva(Client client, int numPersones, int numNits, LocalDate entrada, LocalDate sortida, Habitacio habitacio) {
@@ -29,9 +28,8 @@ public class Reserva {
         this.habitacio = habitacio;
     }
 
-    public Reserva(){
+    public Reserva() {
     }
-    
 
     public Client getClient() {
         return client;
@@ -80,10 +78,18 @@ public class Reserva {
     public void setHabitacio(Habitacio habitacio) {
         this.habitacio = habitacio;
     }
-    
-    public String [] arrayReservaPendent(){
+
+    public int getIdReserva() {
+        return idReserva;
+    }
+
+    public void setIdReserva(int idReserva) {
+        this.idReserva = idReserva;
+    }
+
+    public String[] arrayReservaPendent() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        String [] array = new String [5];
+        String[] array = new String[5];
         array[0] = this.client.dni;
         array[1] = this.entrada.format(formatter);
         array[2] = this.sortida.format(formatter);
@@ -91,4 +97,11 @@ public class Reserva {
         array[4] = Integer.toString(this.habitacio.getNumHab());
         return array;
     }
+
+    @Override
+    public String toString() {
+         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+         return "ID: " + this.idReserva + " - " + dtf.format(this.entrada) + " - " + this.numPersones + " pax";
+    }
+
 }
