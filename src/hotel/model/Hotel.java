@@ -32,36 +32,8 @@ public class Hotel {
         this.nomHotel = nomHotel;
     }
 
-    public ArrayList<Habitacio> getLlistaHab() {
-        return habitacions;
-    }
-
-    public void setLlistaHab(ArrayList<Habitacio> llistaHab) {
-        this.habitacions = llistaHab;
-    }
-
-    public ArrayList<Client> getLlistaClients() {
-        return llistaClients;
-    }
-
-    public void setLlistaClients(ArrayList<Client> llistaClients) {
-        this.llistaClients = llistaClients;
-    }
-
     public ArrayList<Reserva> getLlistaReservesPendents() {
         return llistaReservesPendents;
-    }
-
-    public void setLlistaReservesPendents(ArrayList<Reserva> llistaReservesPendents) {
-        this.llistaReservesPendents = llistaReservesPendents;
-    }
-
-    public ArrayList<Reserva> getLlistaResservesConfirmades() {
-        return llistaResservesConfirmades;
-    }
-
-    public void setLlistaResservesConfirmades(ArrayList<Reserva> llistaResservesConfirmades) {
-        this.llistaResservesConfirmades = llistaResservesConfirmades;
     }
 
     public boolean clientExisteix(String dni) {

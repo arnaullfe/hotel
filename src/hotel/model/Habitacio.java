@@ -10,7 +10,6 @@ package hotel.model;
  * @author arnau1
  */
 public class Habitacio {
-    String hotel;
     int numHab,numPers;
 
     public Habitacio(int num, int pers){
@@ -18,16 +17,8 @@ public class Habitacio {
         this.numPers = pers;
     }
 
-    public void setHotel(String hotel) {
-        this.hotel = hotel;
-    }
-
     public int getNumHab() {
         return numHab;
-    }
-
-    public void setNumHab(int numHab) {
-        this.numHab = numHab;
     }
 
     public int getNumPers() {

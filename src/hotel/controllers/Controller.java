@@ -80,38 +80,32 @@ public class Controller {
                     case "JTextFieldDni":
                         if (!validDni(view.jtfDNI.getText())) {
                             valid = false;
-                            break;
                         }
                         break;
 
                     case "JTextFieldNom":
                         if (!onlyLetters(view.jtfNom.getText())) {
                             valid = false;
-                            break;
                         }
                         break;
 
                     case "JTextFieldCognom":
                         if (!onlyLetters(view.jtfCognoms.getText())) {
                             valid = false;
-                            break;
                         }
                         break;
 
                     case "JTextFieldNumPers":
                         if (!onlyNumbers(view.jtfNumPers.getText())) {
                             valid = false;
-                            break;
                         }
                         break;
 
                     case "JTextFieldNumNits":
                         if (!onlyNumbers(view.jtfNumNits.getText())) {
                             valid = false;
-                            break;
                         }
                         break;
-
                 }
             }
         }
@@ -140,6 +134,20 @@ public class Controller {
                 if (e.getComponent().equals(view.jtfDNI)) {
                     if (validDni(view.jtfDNI.getText())) {
                         view.jlDniIcon.setIcon(view.iiValid);
+                        if (hotel.clientExisteix(view.jtfDNI.getText())) {
+                            int opcio = JOptionPane.showConfirmDialog(view, "S'ha detactat que aquest client ja esta registrat, vols autocompletar els altres camps?");
+                            switch (opcio) {
+                                case 0:
+                                    Client client = hotel.getObjectClient(view.jtfDNI.getText());
+                                    view.jtfNom.setText(client.getNom());
+                                    view.jtfCognoms.setText(client.getCognoms());
+                                    break;
+                                default:
+                                    break;
+                            }
+
+                        }
+
                     } else {
                         view.jlDniIcon.setIcon(view.iiNoValid);
                     }
@@ -211,6 +219,7 @@ public class Controller {
                     hotel.afegirReservaPendent(reserva);
                     view.modelResPend.addRow(reserva.arrayReservaPendent());
                     view.clearJTFClient();
+                    updateJListReserves();
                     JOptionPane.showMessageDialog(null, "La reserva ha estat feta correctament");
                     idReserva++;
                 } else {
@@ -245,7 +254,7 @@ public class Controller {
         view.jtfPers.addKeyListener(habitacio);
     }
 
-    public void listenerBotoReservarHabitacio() {
+    public void listenerBotoAfegirHabitacio() {
         ActionListener listener = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -288,8 +297,8 @@ public class Controller {
                                 hotel.novaReservaConfirmada(confirmada);
                                 hotel.eliminarRerservaPendent(posicio);
                                 view.modelResPend.removeRow(posicio);
-                                JOptionPane.showMessageDialog(view, "La reserva s'ha confirmat correctament!");
                                 updateTaulaReservesonfirmades();
+                                JOptionPane.showMessageDialog(view, "La reserva s'ha confirmat correctament!");
                                 break;
                             case "Descartar la reserva":
                                 hotel.eliminarRerservaPendent(posicio);
@@ -410,8 +419,8 @@ public class Controller {
             view.modelReservesClient.addElement(a);
         }
     }
-    
-    public void listenerJlistReserves(){
+
+    public void listenerJlistReserves() {
         ListSelectionListener listener = new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
@@ -420,20 +429,20 @@ public class Controller {
         };
         view.jlistReservesClient.addListSelectionListener(listener);
     }
-    
-    public void listenerJbuttonElimina(){
+
+    public void listenerJbuttonElimina() {
         ActionListener listener = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 int opcio = JOptionPane.showConfirmDialog(view, "Estàs segur de que vols eliminar la reserva?");
-                switch(opcio){
+                switch (opcio) {
                     case 0:
-                        Reserva reserva = (Reserva)view.jlistReservesClient.getSelectedValue();
+                        Reserva reserva = (Reserva) view.jlistReservesClient.getSelectedValue();
                         int posicio = hotel.getPosicioReservaPendent(reserva);
-                        if(posicio>=0){
+                        if (posicio >= 0) {
                             hotel.eliminarRerservaPendent(posicio);
                             updateReservesPendents();
-                        } else{
+                        } else {
                             posicio = hotel.getPosicioReservaConfirmada(reserva);
                             hotel.eliminarRerservaConfirmada(posicio);
                             updateTaulaReservesonfirmades();
@@ -448,18 +457,18 @@ public class Controller {
         };
         view.jbElimina.addActionListener(listener);
     }
-    
-    public void updateReservesPendents(){
+
+    public void updateReservesPendents() {
         view.modelResPend.setRowCount(0);
-        for(Reserva a : hotel.getLlistaReservesPendents()){
+        for (Reserva a : hotel.getLlistaReservesPendents()) {
             view.modelResPend.addRow(a.arrayReservaPendent());
         }
     }
-    
-    public void updateJListReserves(){
+
+    public void updateJListReserves() {
         view.modelReservesClient.clear();
         Client client = (Client) view.jlistnomClient.getSelectedValue();
-        if(client!=null){
+        if (client != null) {
             afegirReservesClientJList(hotel.reservesClient(client));
         }
     }

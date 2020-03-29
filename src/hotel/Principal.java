@@ -28,7 +28,7 @@ public class Principal {
         ctrl.listenerBotoReservar();
         ctrl.listenerBotoNomHotel();
         ctrl.listenerJTFHabitacio();
-        ctrl.listenerBotoReservarHabitacio();
+        ctrl.listenerBotoAfegirHabitacio();
         //ctrl.afegirDades();
         ctrl.listenerReservaPendent();
         ctrl.listenerToggleButtonEntradesSortides();

@@ -10,6 +10,8 @@ import com.toedter.calendar.JDateChooser;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Image;
+import java.sql.Date;
+import java.time.LocalDate;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -130,6 +132,7 @@ public class Finestra extends JFrame{
         
         jdcResConf = new JDateChooser();
         jdcResConf.setBounds(210,400,168,30);
+        jdcResConf.setDate(Date.valueOf(LocalDate.now()));
         jpGestio.add(jdcResConf);
         
         modelResConf = new DefaultTableModel();

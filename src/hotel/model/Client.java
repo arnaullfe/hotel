@@ -22,24 +22,12 @@ public class Client {
         return dni;
     }
 
-    public void setDni(String dni) {
-        this.dni = dni;
-    }
-
     public String getNom() {
         return nom;
     }
 
-    public void setNom(String nom) {
-        this.nom = nom;
-    }
-
     public String getCognoms() {
         return cognoms;
-    }
-
-    public void setCognoms(String cognoms) {
-        this.cognoms = cognoms;
     }
 
     @Override

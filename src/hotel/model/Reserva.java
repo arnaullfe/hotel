@@ -47,10 +47,6 @@ public class Reserva {
         this.numPersones = numPersones;
     }
 
-    public int getNumNits() {
-        return numNits;
-    }
-
     public void setNumNits(int numNits) {
         this.numNits = numNits;
     }
@@ -77,10 +73,6 @@ public class Reserva {
 
     public void setHabitacio(Habitacio habitacio) {
         this.habitacio = habitacio;
-    }
-
-    public int getIdReserva() {
-        return idReserva;
     }
 
     public void setIdReserva(int idReserva) {
