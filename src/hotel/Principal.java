@@ -36,6 +36,7 @@ public class Principal {
         ctrl.listenerjtfNomClient();
         ctrl.listenerJlistClients();
         ctrl.listenerJlistReserves();
+        ctrl.listenerJbuttonElimina();
     }
     
 }

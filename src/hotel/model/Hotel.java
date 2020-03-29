@@ -162,6 +162,10 @@ public class Hotel {
         this.llistaReservesPendents.remove(pos);
     }
     
+    public void eliminarRerservaConfirmada(int pos){
+        this.llistaResservesConfirmades.remove(pos);
+    }
+    
     public ArrayList<Reserva> mostrarSortides(LocalDate date){
         ArrayList<Reserva> sortides = new ArrayList<>();
         for(Reserva a: this.llistaResservesConfirmades){
@@ -201,8 +205,22 @@ public class Hotel {
         return al;
     }
     
-    public Reserva getReserva(){
-        return null;
+    public int getPosicioReservaPendent(Reserva reserva){
+        for(Reserva a : llistaReservesPendents){
+            if(a.equals(reserva)){
+                return llistaReservesPendents.indexOf(a);
+            }
+        }
+        return -1;
+    }
+    
+     public int getPosicioReservaConfirmada(Reserva reserva){
+        for(Reserva a : llistaResservesConfirmades){
+            if(a.equals(reserva)){
+                return llistaResservesConfirmades.indexOf(a);
+            }
+        }
+        return -1;
     }
     
 }

@@ -294,6 +294,7 @@ public class Controller {
                             case "Descartar la reserva":
                                 hotel.eliminarRerservaPendent(posicio);
                                 view.modelResPend.removeRow(posicio);
+                                updateJListReserves();
                                 JOptionPane.showMessageDialog(view, "La reserva s'ha descartat correctament!");
                                 break;
                             default:
@@ -398,12 +399,7 @@ public class Controller {
         ListSelectionListener listener = new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
-                view.modelReservesClient.clear();
-                    Client client = (Client) view.jlistnomClient.getSelectedValue();
-                    if(client!=null){
-                        afegirReservesClientJList(hotel.reservesClient(client));
-                    }
-                
+                updateJListReserves();
             }
         };
         view.jlistnomClient.addListSelectionListener(listener);
@@ -432,9 +428,39 @@ public class Controller {
                 int opcio = JOptionPane.showConfirmDialog(view, "Estàs segur de que vols eliminar la reserva?");
                 switch(opcio){
                     case 0:
-                        
+                        Reserva reserva = (Reserva)view.jlistReservesClient.getSelectedValue();
+                        int posicio = hotel.getPosicioReservaPendent(reserva);
+                        if(posicio>=0){
+                            hotel.eliminarRerservaPendent(posicio);
+                            updateReservesPendents();
+                        } else{
+                            posicio = hotel.getPosicioReservaConfirmada(reserva);
+                            hotel.eliminarRerservaConfirmada(posicio);
+                            updateTaulaReservesonfirmades();
+                        }
+                        updateJListReserves();
+                        JOptionPane.showMessageDialog(view, "La reserva s'ha eliminat correctament");
+                    default:
+                        break;
+
                 }
             }
         };
+        view.jbElimina.addActionListener(listener);
+    }
+    
+    public void updateReservesPendents(){
+        view.modelResPend.setRowCount(0);
+        for(Reserva a : hotel.getLlistaReservesPendents()){
+            view.modelResPend.addRow(a.arrayReservaPendent());
+        }
+    }
+    
+    public void updateJListReserves(){
+        view.modelReservesClient.clear();
+        Client client = (Client) view.jlistnomClient.getSelectedValue();
+        if(client!=null){
+            afegirReservesClientJList(hotel.reservesClient(client));
+        }
     }
 }
