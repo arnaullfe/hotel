@@ -28,7 +28,7 @@ public class Controller {
     private Finestra view;
     private Hotel hotel;
     private int idReserva = 1;
-    private Fitxer fitxer = new Fitxer();
+    private Fitxer fitxer;
 
     public Controller(Finestra view, Hotel hotel) {
         this.view = view;
@@ -45,7 +45,7 @@ public class Controller {
         listenerJlistClients();
         listenerJlistReserves();
         listenerJbuttonElimina();
-
+        fitxer = new Fitxer();
         fitxerNomHotel();
     }
 
