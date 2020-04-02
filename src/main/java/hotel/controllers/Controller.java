@@ -3,25 +3,24 @@ package hotel.controllers;
 import com.toedter.calendar.JCalendar;
 import hotel.model.*;
 import hotel.views.Finestra;
-import java.awt.Component;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.ArrayList;
-import javax.swing.JOptionPane;
-import javax.swing.JTextField;
+
+import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import java.awt.*;
+import java.awt.event.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.io.File;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 
 public class Controller {
 
@@ -33,6 +32,12 @@ public class Controller {
     public Controller(Finestra view, Hotel hotel) {
         this.view = view;
         this.hotel = hotel;
+        listeners();
+        dadesFitxers();
+
+    }
+
+    public  void listeners(){
         ComprovarCampsClient(view.jpClients.getComponents());
         listenerBotoReservar();
         listenerBotoNomHotel();
@@ -45,8 +50,15 @@ public class Controller {
         listenerJlistClients();
         listenerJlistReserves();
         listenerJbuttonElimina();
+    }
+
+    public void dadesFitxers(){
         fitxer = new Fitxer();
         fitxerNomHotel();
+        fitxerHabitacions();
+        fitxerClients();
+        fitxerReservesPendents();
+        fitxerReservesConfirmades();
     }
 
     public void afegirDades() {
@@ -217,6 +229,8 @@ public class Controller {
                 if (!hotel.clientExisteix(view.jtfDNI.getText())) {
                     Client cli = new Client(view.jtfDNI.getText().toUpperCase(), view.jtfNom.getText(), view.jtfCognoms.getText());
                     hotel.afegirClient(cli);
+                    String dadesClient= view.jtfDNI.getText().toUpperCase()+"-"+view.jtfNom.getText()+"-"+view.jtfCognoms.getText();
+                    fitxer.updateFitxer(fitxer.getClients(),dadesClient,null);
                 }
                 reserva.setIdReserva(idReserva);
                 reserva.setClient(hotel.getObjectClient(view.jtfDNI.getText()));
@@ -231,10 +245,13 @@ public class Controller {
                     view.modelResPend.addRow(reserva.arrayReservaPendent());
                     view.clearJTFClient();
                     updateJListReserves();
-                    JOptionPane.showMessageDialog(null, "La reserva ha estat feta correctament");
+                    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                    String dadesReserva=reserva.getIdReserva()+"-"+reserva.getClient().getDni()+"-"+reserva.getNumPersones()+"-"+reserva.getNumNits()+"-"+assignat.getNumHab()+"-"+dtf.format(reserva.getEntrada())+"-"+dtf.format(reserva.getSortida());
+                    fitxer.updateFitxer(fitxer.getReservesPendents(),dadesReserva,null);
+                    JOptionPane.showMessageDialog(view, "La reserva ha estat feta correctament");
                     idReserva++;
                 } else {
-                    JOptionPane.showMessageDialog(null, " Error, no hi ha habitacions disponibles per aquests dies");
+                    JOptionPane.showMessageDialog(view, " Error, no hi ha habitacions disponibles per aquests dies");
                 }
                 view.clearJTFClient();
             }
@@ -273,6 +290,9 @@ public class Controller {
                     int opcio = JOptionPane.showConfirmDialog(null, "El númerod'habitació ja existeix. -Capacitat actual: " + nova.getNumPers() + " persones    -Nova capacitat: " + view.jtfPers.getText() + " persones. \nEstàs segur que ho desitges canviar?");
                     switch (opcio) {
                         case 0:
+                            String novaLinia = nova.getNumHab()+"-"+view.jtfPers.getText();
+                            String liniaAnterior = nova.getNumHab()+"-"+nova.getNumPers();
+                            fitxer.updateFitxer(fitxer.getHabitacions(),novaLinia,liniaAnterior);
                             hotel.canviarMida(nova.getNumHab(), Integer.parseInt(view.jtfPers.getText()));
                             break;
                         default:
@@ -281,6 +301,7 @@ public class Controller {
                 } else {
                     Habitacio habitacio = new Habitacio(Integer.parseInt(view.jtfNum.getText()), Integer.parseInt(view.jtfPers.getText()));
                     hotel.afegirHabitacio(habitacio);
+                    fitxer.updateFitxer(fitxer.getHabitacions(),habitacio.getNumHab()+"-"+habitacio.getNumPers(),null);
                     JOptionPane.showMessageDialog(null, "L'habitació número " + view.jtfNum.getText() + " ha estat afegida");
                 }
                 view.clearRegHab();
@@ -298,18 +319,21 @@ public class Controller {
                     String opcio = (String) JOptionPane.showInputDialog(view, "Selecciona el que vols fer amb la reserva:", opcions[0], JOptionPane.DEFAULT_OPTION, null, opcions, opcions[0]);
                     if (opcio != null) {
                         int posicio = view.jtResPend.rowAtPoint((e.getPoint()));
+                        Reserva confirmada = hotel.getLlistaReservesPendents().get(posicio);
                         switch (opcio) {
                             case "Confirmar la reserva":
-                                Reserva confirmada = hotel.getLlistaReservesPendents().get(posicio);
                                 hotel.novaReservaConfirmada(confirmada);
                                 hotel.eliminarRerservaPendent(posicio);
                                 view.modelResPend.removeRow(posicio);
+                                fitxer.updateFitxer(fitxer.getReservesConfirmades(),dadesFitxerReserva(confirmada),null);
+                                fitxer.eliminarLinia(fitxer.getReservesPendents(),dadesFitxerReserva(confirmada));
                                 updateTaulaReservesonfirmades();
                                 JOptionPane.showMessageDialog(view, "La reserva s'ha confirmat correctament!");
                                 break;
                             case "Descartar la reserva":
                                 hotel.eliminarRerservaPendent(posicio);
                                 view.modelResPend.removeRow(posicio);
+                                fitxer.eliminarLinia(fitxer.getReservesPendents(),dadesFitxerReserva(confirmada));
                                 updateJListReserves();
                                 JOptionPane.showMessageDialog(view, "La reserva s'ha descartat correctament!");
                                 break;
@@ -446,14 +470,18 @@ public class Controller {
                     case 0:
                         Reserva reserva = (Reserva) view.jlistReservesClient.getSelectedValue();
                         int posicio = hotel.getPosicioReservaPendent(reserva);
+                        File f;
                         if (posicio >= 0) {
                             hotel.eliminarRerservaPendent(posicio);
+                            f= fitxer.getReservesPendents();
                             updateReservesPendents();
                         } else {
                             posicio = hotel.getPosicioReservaConfirmada(reserva);
                             hotel.eliminarRerservaConfirmada(posicio);
+                            f = fitxer.getReservesConfirmades();
                             updateTaulaReservesonfirmades();
                         }
+                        fitxer.eliminarLinia(f,dadesFitxerReserva(reserva));
                         updateJListReserves();
                         JOptionPane.showMessageDialog(view, "La reserva s'ha eliminat correctament");
                     default:
@@ -481,8 +509,8 @@ public class Controller {
     }
 
     public void fitxerNomHotel(){
-        if(fitxer.llegirFitxer(fitxer.getHotel())!=null){
-            canviaNomHotel(fitxer.llegirFitxer(fitxer.getHotel()));
+        if(fitxer.llegirFitxer(fitxer.getHotel()).size()>0){
+            canviaNomHotel(fitxer.llegirFitxer(fitxer.getHotel()).get(0));
         } else{
             canviaNomHotel("RuralCirv");
             fitxer.escriureFitxer(fitxer.getHotel(),hotel.getNomHotel());
@@ -491,5 +519,55 @@ public class Controller {
     public void canviaNomHotel(String nom){
         hotel.setNomHotel(nom);
         view.setTitle(hotel.getNomHotel());
+    }
+
+    public void fitxerHabitacions(){
+        for(String a : fitxer.llegirFitxer(fitxer.getHabitacions())){
+            String [] array = a.split("-");
+            hotel.afegirHabitacio(new Habitacio(Integer.parseInt(array[0]),Integer.parseInt(array[1])));
+        }
+
+    }
+    public void fitxerClients(){
+        for(String a : fitxer.llegirFitxer(fitxer.getClients())){
+            String array [] = a.split("-");
+            hotel.afegirClient(new Client(array[0],array[1],array[2]));
+            }
+
+    }
+
+    public void fitxerReservesPendents(){
+        for(String a : fitxer.llegirFitxer(fitxer.getReservesPendents())){
+            String array [] = a.split("-");
+            hotel.afegirReservaPendent(ferReservaAmbArray(array));
+            view.modelResPend.addRow(ferReservaAmbArray(array).arrayReservaPendent());
+        }
+    }
+
+    public void fitxerReservesConfirmades(){
+        for(String a : fitxer.llegirFitxer(fitxer.getReservesConfirmades())){
+            String array [] = a.split("-");
+            hotel.afegirReservaConfirmada(ferReservaAmbArray(array));
+        }
+        updateTaulaReservesonfirmades();
+    }
+
+    public Reserva ferReservaAmbArray(String [] array){
+        Reserva reserva = new Reserva();
+        reserva.setIdReserva(Integer.parseInt(array[0]));
+        reserva.setClient(hotel.getObjectClient(array[1]));
+        reserva.setNumPersones(Integer.parseInt(array[2]));
+        reserva.setNumNits(Integer.parseInt(array[3]));
+        reserva.setHabitacio(hotel.habitacioExisteix(Integer.parseInt(array[4])));
+        String data [] = array[5].split("/");
+        reserva.setEntrada(LocalDate.parse(data[2]+"-"+data[1]+"-"+data[0]));
+        data = array[6].split("/");
+        reserva.setSortida(LocalDate.parse(data[2]+"-"+data[1]+"-"+data[0]));
+        return reserva;
+    }
+    public String dadesFitxerReserva(Reserva confirmada){
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        String reservaDades = confirmada.getIdReserva()+"-"+confirmada.getClient().getDni()+"-"+confirmada.getNumPersones()+"-"+confirmada.getNumNits()+"-"+confirmada.getHabitacio().getNumHab()+"-"+dtf.format(confirmada.getEntrada())+"-"+dtf.format(confirmada.getSortida());
+        return reservaDades;
     }
 }

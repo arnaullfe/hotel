@@ -22,9 +22,6 @@ public class Principal {
         Finestra vista = new Finestra();
         Hotel model = new Hotel();
         Controller ctrl = new Controller(vista,model);
-
-        //ctrl.afegirDades();
-
     }
     
 }

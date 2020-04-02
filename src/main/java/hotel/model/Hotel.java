@@ -68,6 +68,7 @@ public class Hotel {
     }
 
     public void afegirHabitacio(Habitacio habitacio) {
+        System.out.println(habitacio.getNumHab());
         this.habitacions.add(habitacio);
     }
 

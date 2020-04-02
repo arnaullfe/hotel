@@ -6,13 +6,14 @@
 package hotel.model;
 
 import java.io.*;
+import java.util.ArrayList;
 
 /**
  *
  * @author arnau1
  */
 public class Fitxer {
-    File habitacions,reserves,clients,hotel,carpeta,fitxerTemp;
+    File habitacions,reservesPendents,reservesConfirmades,clients,hotel,carpeta,fitxerTemp;
     FileWriter fileWriter;
     BufferedWriter bufferedWriter;
     FileReader fileReader;
@@ -27,42 +28,21 @@ public class Fitxer {
         return habitacions;
     }
 
-    public void setHabitacions(File habitacions) {
-        this.habitacions = habitacions;
+    public File getReservesPendents() {
+        return reservesPendents;
     }
 
-    public File getReserves() {
-        return reserves;
-    }
-
-    public void setReserves(File reserves) {
-        this.reserves = reserves;
+    public File getReservesConfirmades() {
+        return reservesConfirmades;
     }
 
     public File getClients() {
         return clients;
     }
 
-    public void setClients(File clients) {
-        this.clients = clients;
-    }
-
     public File getHotel() {
         return hotel;
     }
-
-    public void setHotel(File hotel) {
-        this.hotel = hotel;
-    }
-
-    public File getCarpeta() {
-        return carpeta;
-    }
-
-    public void setCarpeta(File carpeta) {
-        this.carpeta = carpeta;
-    }
-
 
     private void crearDirectori(){
         carpeta = new File("data");
@@ -75,12 +55,15 @@ public class Fitxer {
 
     private void crearFitxers(){
         habitacions = new File("data"+File.separator+"habitacions.txt");
-        reserves = new File("data"+File.separator+"reserves.txt");
+        reservesPendents = new File("data"+File.separator+"reservesPendents.txt");
+        reservesConfirmades = new File("data"+File.separator+"reservesConfirmades.txt");
         clients = new File("data"+File.separator+"clients.txt");
         hotel = new File("data"+File.separator+"hotel.txt");
+        fitxerTemp = new File("data"+File.separator+"fitxerTemp.txt");
         try {
             statusCreacioFitxers(habitacions.createNewFile(),habitacions.getName());
-            statusCreacioFitxers(reserves.createNewFile(),reserves.getName());
+            statusCreacioFitxers(reservesPendents.createNewFile(),reservesPendents.getName());
+            statusCreacioFitxers(reservesConfirmades.createNewFile(),reservesConfirmades.getName());
             statusCreacioFitxers(clients.createNewFile(),clients.getName());
             statusCreacioFitxers(hotel.createNewFile(),hotel.getName());
         } catch (IOException e) {
@@ -97,7 +80,6 @@ public class Fitxer {
     }
 
     public void escriureFitxer(File fitxer, String linia){
-            fitxerTemp = new File("data"+File.separator+"fitxerTemp.txt");
         try {
             fileWriter = new FileWriter(fitxer,false);
             bufferedWriter = new BufferedWriter(fileWriter);
@@ -106,7 +88,6 @@ public class Fitxer {
         }
         try {
             bufferedWriter.write(linia);
-            System.out.println(linia);
         } catch (IOException e) {
             System.err.println("Error al escriure: "+e);
         }
@@ -117,7 +98,7 @@ public class Fitxer {
         }
     }
 
-    public String llegirFitxer(File fitxer){
+    public ArrayList<String> llegirFitxer(File fitxer){
         try {
             fileReader = new FileReader(fitxer);
             bufferedReader = new BufferedReader(fileReader);
@@ -125,12 +106,100 @@ public class Fitxer {
             System.err.println("Error al iniciar el fileReader o BufferedReader: "+e);
         }
         String currentLine = "";
+        ArrayList<String> al = new ArrayList<>();
+        while(true) {
+            try {
+                if (!((currentLine = bufferedReader.readLine())!=null)) break;
+                al.add(currentLine);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
         try {
-            currentLine = bufferedReader.readLine();
-
+            bufferedReader.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return currentLine;
+        return al;
     }
+
+    public void updateFitxer(File fitxer, String novaLinia, String liniaEditar){
+        try {
+            fileReader = new FileReader(fitxer);
+            fileWriter = new FileWriter(fitxerTemp);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        bufferedReader = new BufferedReader(fileReader);
+        bufferedWriter = new BufferedWriter(fileWriter);
+        String currentLine = "";
+        while(true){
+            try {
+                if (!((currentLine = bufferedReader.readLine())!=null)) break;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            if(liniaEditar!=null && currentLine.contains(liniaEditar)){
+                currentLine = novaLinia;
+            }
+            try {
+                bufferedWriter.write(currentLine+System.getProperty("line.separator"));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }
+        try {
+            if(liniaEditar==null){
+                bufferedWriter.write(novaLinia+System.getProperty("line.separator"));
+            }
+            bufferedWriter.close();
+            bufferedReader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        fitxer.delete();
+        fitxerTemp.renameTo(fitxer);
+    }
+
+    public void eliminarLinia(File fitxer, String liniaEliminar){
+        try {
+            fileReader = new FileReader(fitxer);
+            fileWriter = new FileWriter(fitxerTemp);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        bufferedReader = new BufferedReader(fileReader);
+        bufferedWriter = new BufferedWriter(fileWriter);
+        String currentLine = "";
+        while(true){
+            try {
+                if (!((currentLine = bufferedReader.readLine())!=null)) break;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            if(!currentLine.contains(liniaEliminar)){
+                try {
+                    bufferedWriter.write(currentLine+System.getProperty("line.separator"));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        try {
+            bufferedWriter.close();
+            bufferedReader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        fitxer.delete();
+        fitxerTemp.renameTo(fitxer);
+    }
+
 }

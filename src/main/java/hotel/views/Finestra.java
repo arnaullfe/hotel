@@ -370,11 +370,7 @@ public class Finestra extends JFrame{
        jlNumNitsIcon.setIcon(null);
        jlNumPersIcon.setIcon(null);
    }
-    
-   public void CanviarTitolFinestra(String nom){
-        this.setTitle(nom);
-   }
-   
+
    public void clearRegHab(){
        jtfNum.setText("");
        jtfPers.setText("");
